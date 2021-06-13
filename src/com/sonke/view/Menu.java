@@ -1336,30 +1336,48 @@ public class Menu extends javax.swing.JFrame {
     }
 
     private void btSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSuaActionPerformed
+        StringBuilder sb = new StringBuilder();
         int check = 0;
         int index = tbGiangVien.getSelectedRow();
-        if (index >= 0) {
-            String ma = txtMagv.getText();
-            String ThayDoi = list.get(index).getMaGv();
-            String ten = txtHoTen.getText();
-            String diaChi = txtDiaChi.getText();
-            boolean GioiTinh = cbNam.isSelected();
-            String Khoa = (String) cbboxkhoa.getSelectedItem();
+        String ten = txtHoTen.getText();
+        //các trường hợp ngoài lệ đc bắt
+        CheckTTNULL(sb);
+        CheckDinhDang(sb);
+        ChuanHoaTen(ten, sb);
 
-            if (check == 0) {
-                GiangVien a = new GiangVien(ma, ten, Khoa, GioiTinh, diaChi);
-                int a1 = quanly.SuaGV(a, ThayDoi);
-                list.set(index, a);
-                if (a1 == 0) {
-                    LoadGVTable();
-                    ResetTT();
-                    JOptionPane.showMessageDialog(this, "Sửa Thành Công: " + txtMagv.getText(), "Thông Báo", HEIGHT);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Sửa Thất Bại: " + txtMagv.getText(), "Thông Báo", HEIGHT);
-                }
+        for (int i = 0; i < list.size(); i++) {
+            if (txtMagv.getText().equals(list.get(i).getMaGv())) {
+                check = 1;
+                JOptionPane.showMessageDialog(this, "Đã Tồn Tại Mã GV Này: " + txtMagv.getText(), "Thông Báo", HEIGHT);
             }
         }
-        LoadGVTable();
+        if (sb.length() > 0) {
+            JOptionPane.showMessageDialog(this, sb.toString(), "Thông Báo", HEIGHT);
+        } else {
+            if (index >= 0) {
+                String ma = txtMagv.getText();
+                String ThayDoi = list.get(index).getMaGv();
+
+                String diaChi = txtDiaChi.getText();
+                boolean GioiTinh = cbNam.isSelected();
+                String Khoa = (String) cbboxkhoa.getSelectedItem();
+
+                if (check == 0) {
+                    GiangVien a = new GiangVien(ma, ten, Khoa, GioiTinh, diaChi);
+                    int a1 = quanly.SuaGV(a, ThayDoi);
+                    list.set(index, a);
+                    if (a1 == 0) {
+                        LoadGVTable();
+                        ResetTT();
+                        JOptionPane.showMessageDialog(this, "Sửa Thành Công: " + txtMagv.getText(), "Thông Báo", HEIGHT);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Sửa Thất Bại: " + txtMagv.getText(), "Thông Báo", HEIGHT);
+                    }
+                }
+            }
+            LoadGVTable();
+
+        }
     }//GEN-LAST:event_btSuaActionPerformed
 
     private void btXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btXoaActionPerformed
